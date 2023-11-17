@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PokApi</title>
+    <link rel="stylesheet" href="/public/assets/css/bootstrap.min.css">
+</head>
+
+<body class="bg-dark">
+    <nav id="navbar" class="navbar navbar-expand-lg sticky-top bg-body-secondary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+            <img src="/public/assets/img/bootstrap-logo.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+            PokApi!
+            </a>
+            <button class="navbar-toggler d-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse d-none" id="navbarToggler">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="#" id="findAllPokemons">Pokemons</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="loginForm" class="container p-5">
+        <div class="row">
+            <form>
+                <div class="form-floating mb-3">
+                    <input type="email" class="form-control" id="usermail" placeholder="name@example.com">
+                    <label for="usermail">Email address</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="userpw" placeholder="Password">
+                    <label for="userpw">Password</label>
+                </div>
+                <button class="btn btn-primary" id="signupBtn">Créer un compte</button>
+                <button class="btn btn-primary" id="loginBtn">Connexion</button>
+                <div>
+                    <span class="text-danger" id="loginFormError"></span>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="pokemonsList" class="d-none container p-5">
+        <div class="row">
+
+        </div>
+    </div>
+
+    <script src="/public/assets/js/bootstrap.bundle.js"></script>
+    <script type="module" src="/public/assets/js/functions.js"></script>
+    <script type="module" src="/public/assets/js/main.js"></script>
+</body>
+
+</html>

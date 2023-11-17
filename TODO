@@ -1,0 +1,35 @@
+
+AWS ROAD MAP (nodejs 18):
+  BDD maria DB:
+    ☐ AWS RDS
+  Serveur nodeJS:
+    ☐ AWS Elastic beanstalk
+      ☐ Création de l'application : https://eu-west-3.console.aws.amazon.com/elasticbeanstalk/home?region=eu-west-3#/environments
+      ☐ Suivre ce tutoriel : https://www.freecodecamp.org/news/how-to-use-elastic-beanstalk-to-deploy-node-js-app/
+        ☐ En fonction, ne pas tenir compte de la BDD si tu l'as créée ailleur
+      ☐ ne pas oubliez .ebextensions ( a priori il le faut )
+      ☐ Configuration du server
+        ☐ Il faut aller dans EC2 : https://eu-west-3.console.aws.amazon.com/ec2/home?region=eu-west-3#Instances:
+        ☐ Choisir l'instance en question
+        ☐ "se connecter"
+        ☐ Se connecter à l'aide d'EC2 instance connect ( plus besoin de putty)
+        ☐ Arriver sur le "root" tapper : "su ec2-user"
+        ☐ J'ai du installer pas mal de chose pour ce coup ci, mais parce que ca plantai au démarrage (web.service)
+        ☐ Il faudra revenir a la  racine du server tapper : "cd .."
+        ☐ "ls" pour afficher le contenu du dossier, faire "cd .." tant que pas a la racine
+        ☐ Installation de EB CLI ( permet d'utiliser "eb logs" ou "eb deploy", hyper important pour les logs : )
+          ☐ sudo yum install -y python3 python3-pip
+          ☐ pip3 install awsebcli --upgrade --user
+        ☐ le zip du déploiement va se trouver sur var/app/current
+        ☐ SI JAMAIS ca refuse d'aller dans les repertoires (), c'est que ec2-user a pas les acces voici comment faire : 
+          ☐ "sudo chown -R ec2-user:ec2-user /var/app/current/"
+        ☐ Se rendre dans var/app/current
+        ☐ Si y a des soucis de dependance voila comment fix :
+          ☐ "rm -rf node_modules" > supprime le repertoire node_modules
+          ☐ "npm install" > va le reinstaller
+          ☐ OPTIONEL j'ai eu un soucis avec bcrypt (Error: /var/app/current/node_modules/bcrypt/lib/binding/napi-v3/bcrypt_lib.node: invalid ELF header) resolu grace a : "npm rebuild bcrypt --build-from-source"
+        ☐ J'ai eu un soucis de webservice : 
+          ☐ Pour les logs : "sudo journalctl -u web.service"
+          ☐ Pour relancer juste webservice : "sudo systemctl restart web.service"
+
+  Site web d'acces API:
