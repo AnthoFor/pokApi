@@ -31,5 +31,6 @@ AWS ROAD MAP (nodejs 18):
         ☐ J'ai eu un soucis de webservice : 
           ☐ Pour les logs : "sudo journalctl -u web.service"
           ☐ Pour relancer juste webservice : "sudo systemctl restart web.service"
+        ☐ Voir les services en cours : "sudo systemctl list-units --type=service" (permet de voir si y en a un qui pose soucis)
 
   Site web d'acces API:
