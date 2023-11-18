@@ -3,7 +3,7 @@ import { drawNavbar, hide, unhide, fetchData } from "./functions.js";
 // VAR
 let usermail;
 let userpw;
-let uri = 'http://pokapi-env.eba-mm7ydr5d.eu-west-3.elasticbeanstalk.com/' ;
+let uri = 'https://pokapi.anthony-foret.fr/' ;
 
 
 // EventListener
@@ -22,7 +22,6 @@ document.querySelector("#loginBtn").addEventListener("click", async function () 
             body: JSON.stringify({ usermail: usermail, password: userpw }),
             headers: { "Content-type": "application/json" }
         })
-        console.log(response);
         if (response.token !== undefined) {
             localStorage.setItem('token', response.token)
             drawNavbar()
