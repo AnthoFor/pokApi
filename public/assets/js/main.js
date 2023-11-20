@@ -23,6 +23,7 @@ document.querySelector("#loginBtn").addEventListener("click", async function () 
             headers: { "Content-type": "application/json" }
         })
         if (response.token !== undefined) {
+            console.log(response);
             localStorage.setItem('token', response.token)
             drawNavbar()
             hide(document.querySelector('#loginForm'))

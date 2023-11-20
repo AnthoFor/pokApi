@@ -32,5 +32,7 @@ AWS ROAD MAP (nodejs 18):
           ☐ Pour les logs : "sudo journalctl -u web.service"
           ☐ Pour relancer juste webservice : "sudo systemctl restart web.service"
         ☐ Voir les services en cours : "sudo systemctl list-units --type=service" (permet de voir si y en a un qui pose soucis)
-
+    ☐ HTTPS... (attention ca m'a pris 8h)
+      ☐ Suivre ce tutoriel, elastic bean stalk, créé un instance EC2. Donc ca fonctionne parfaitement. https://www.youtube.com/watch?v=JQP96EjRM98
+      
   Site web d'acces API:
