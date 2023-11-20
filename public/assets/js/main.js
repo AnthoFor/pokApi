@@ -33,6 +33,7 @@ if (localStorage.getItem('token')) {
 // EventListener
 // Pas encore de compte
 document.querySelector('#signupBtn').addEventListener('click', () => {
+    event.preventDefault();
     usermailCheckDiv.classList.toggle('d-none');
     userPwCheck.classList.toggle('d-none');
     loginBtn.innerHTML = 'Créer';
@@ -42,6 +43,7 @@ document.querySelector('#signupBtn').addEventListener('click', () => {
 
 // Deja un compte mais j'ai cliqué sur pas encore de compte ( ca mongolise !!)
 document.querySelector('#alreadySignedBtn').addEventListener('click', () => {
+    event.preventDefault();
     usermailCheckDiv.classList.toggle('d-none');
     userPwCheck.classList.toggle('d-none');
     loginBtn.innerHTML = 'Connexion';
