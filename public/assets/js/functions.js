@@ -13,6 +13,10 @@ export function unhide(element) {
     element.classList.remove("d-none");
 }
 
+export function drawMsg(domElement, message) {
+    document.querySelector(domElement).innerHTML = message;
+}
+
 export async function fetchData(uri, params) {
     try {
         const response = await fetch(uri, params)

@@ -28,11 +28,72 @@ AWS ROAD MAP (nodejs 18):
           ☐ "rm -rf node_modules" > supprime le repertoire node_modules
           ☐ "npm install" > va le reinstaller
           ☐ OPTIONEL j'ai eu un soucis avec bcrypt (Error: /var/app/current/node_modules/bcrypt/lib/binding/napi-v3/bcrypt_lib.node: invalid ELF header) resolu grace a : "npm rebuild bcrypt --build-from-source"
-        ☐ J'ai eu un soucis de webservice : 
+          ☐ OPTION KIKOLOLASV : ne met pas le dossier node module dans le zip, upload le, connect toi a ton instance EC2, et npm install, ca works great
+          ☐ J'ai eu un soucis de webservice : 
           ☐ Pour les logs : "sudo journalctl -u web.service"
           ☐ Pour relancer juste webservice : "sudo systemctl restart web.service"
         ☐ Voir les services en cours : "sudo systemctl list-units --type=service" (permet de voir si y en a un qui pose soucis)
     ☐ HTTPS... (attention ca m'a pris 8h)
-      ☐ Suivre ce tutoriel, elastic bean stalk, créé un instance EC2. Donc ca fonctionne parfaitement. https://www.youtube.com/watch?v=JQP96EjRM98
-      
+      ☐ Suivre ce tutoriel, elastic bean stalk, créé un instance EC2. Donc ca fonctionne parfaitement. https://www.youtube.com/watch?v=JQP96EjRM98 à partir de 3:47
+      ☐ LOAD BALANCER :
+        ☐ CREATE
+        ☐ LB Name
+        ☐ Select all subnet
+        ☐ create a new security group
+          ☐ Security group name :nameSecurityGroup
+          ☐ Description : my name security group
+          ☐ Add inbund rules
+            ☐ Allow HTTP traffic (0.0.0.0/0)
+            ☐ Allow HTTPS trafic (0.0.0.0/0)
+          ☐ Create
+        ☐ Select nameSecurityGroup
+        ☐ Listener and routing 
+          ☐ HTTP / 80 -> Create target group
+            ☐ Select "instance"
+            ☐ Target groupe name : nameTargetGroup
+            ☐ Next
+            ☐ select instance
+            ☐ include as pending below
+            ☐ create target group
+          ☐ Selectionne le target group que tu viens de créer dans "forward to"
+          ☐ Create load balancer
+          ☐ Quand les test "healthy" sont passé, normalement la redirection dns du load balancer est OK
+      ☐ ROUTE 53
+        ☐ Aller dans "registred domaine" et mettre de coté (bloc note) les noms de serveurs
+        ☐ Vérifier qu'ils sont stricto senso les meme ( normalement rien a faire) que ceux dans "hosted zone"
+        ☐ Dans hosted zone, cliquer sur "create record
+          ☐ Simple routing
+          ☐ CEST LA QUE CEST IMPORTANT MEC §§§
+          ☐ Value/route traffic to -> ALIAS TO APPLICATION AND CLASSIC LOAD BALANCER
+          ☐ Choisi la region ( la bonne west - 3 )
+          ☐ Choisi ton load balancer ( c'est cette étape qu'il me manquait TBH)
+          ☐ Create
+      ☐ CERTIFICATE MANAGER
+        ☐ request
+        ☐ Met ton DNS
+        ☐ request
+        ☐ Alors qu'il est en "pending validation"
+          ☐ Clique sur ton certificat
+          ☐ "create record in route 53"
+          ☐ Selectionne ton domain et "create record"
+      ☐ LOAD BALANCER (AGAIN§§§§§§§)
+        ☐ Ecouteurs
+          ☐ Add listener
+            ☐ HTTPS
+            ☐ Forward
+              ☐ Selectionne "nameTargetGroup"
+              ☐ Security policy (laisse en recommandé)
+              ☐ SSL Certif : from ACM, selectionne ton certif
+              ☐ AJOUTER
+            ☐ A partir de la tu peux test ton https://kikoo.asv ca doit marcher
+        ☐ redirection du flux http > https
+          ☐ Dans ecouteur, selectionne le HTTP : 80
+            ☐ Le modifier :
+              ☐ REDIRECT TO
+              ☐ HTTPS : 443
+              ☐ SAVE
+    
+
+
+
   Site web d'acces API:

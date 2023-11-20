@@ -19,7 +19,7 @@
             <span class="navbar-toggler-icon"></span>
             </button>
         </div>
-        <div class="collapse navbar-collapse d-none" id="navbarToggler">
+        <div class="col-md-auto navbar-collapse d-none" id="navbarToggler">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                 <a class="nav-link" aria-current="page" href="#" id="findAllPokemons">Pokemons</a>
@@ -31,37 +31,54 @@
                 <a class="nav-link disabled" aria-disabled="true">Disabled</a>
                 </li>
             </ul>
+            <form class="d-flex p-1" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search pokemon" aria-label="Search">
+                <button id="pokemonSearchBtn" class="btn btn-outline-secondary" type="submit">Search</button>
+            </form>
         </div>
     </nav>
 
     <div id="loginForm" class="container p-5">
         <div class="row">
             <form>
-                <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="usermail" placeholder="name@example.com">
-                    <label for="usermail">Email address</label>
+                <div id="usermailDiv" class="form-floating">
+                    <input type="email" class="form-control mb-3" id="usermail" placeholder="name@example.com">
+                    <label for="usermail">Email</label>
+                </div>
+                <div id="usermailCheckDiv" class="form-floating d-none">
+                    <input type="email" class="form-control mb-3" id="usermailCheck" placeholder="name@example.com">
+                    <label id="usermailCheckLabel" for="usermailCheck">Email check</label>
                 </div>
                 <div class="form-floating mb-3">
                     <input type="password" class="form-control" id="userpw" placeholder="Password">
                     <label for="userpw">Password</label>
                 </div>
-                <button class="btn btn-primary" id="signupBtn">Créer un compte</button>
+                <div id="userPwCheck" class="form-floating mb-3 d-none">
+                    <input type="password" class="form-control" id="userpwCheck" placeholder="Password">
+                    <label for="userpwCheck">Password check</label>
+                </div>
                 <button class="btn btn-primary" id="loginBtn">Connexion</button>
+                <button class="btn btn-primary" id="signupBtn">S'inscrire</button>
+                <button class="btn btn-primary d-none" id="alreadySignedBtn">Déjà inscrit!</button>
                 <div>
                     <span class="text-danger" id="loginFormError"></span>
                 </div>
             </form>
         </div>
     </div>
-    <div id="welcDiv">
 
-    </div>
     <div id="pokemonsList" class="d-none container p-5">
         <div class="row">
 
         </div>
     </div>
-
+    <nav class="navbar fixed-bottom bg-body-secondary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <div id="welcDiv">
+                <span class="text-success"></span>
+            </div>
+        </div>
+      </nav>
     <script src="public/assets/js/bootstrap.bundle.js"></script>
     <script type="module" src="public/assets/js/functions.js"></script>
     <script type="module" src="public/assets/js/main.js"></script>
