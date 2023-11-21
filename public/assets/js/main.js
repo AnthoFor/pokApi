@@ -3,8 +3,8 @@ import { drawNavbar, hide, unhide, fetchData, drawMsg } from "./functions.js";
 // VAR
 let usermail;
 let userpw;
-let uri = 'http://localhost:8080/' ;
-// let uri = 'https://pokapi.anthony-foret.fr/';
+// let uri = 'http://localhost:8080/' ;
+let uri = 'https://pokapi.anthony-foret.fr/';
 
 
 // Déjà loggé ?
