@@ -131,7 +131,7 @@ document.querySelector('#findAllPokemons').addEventListener('click', function ()
                 <div class="card-header">${element.name}</div>
                 <img src="${element.picture}" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <a href="#" class="btn btn-primary btn-pokemon" data-id="${element.id}" data-bs-toggle="modal" data-bs-target="#pokeDetail">Détail</a>
+                    <a href="#" class="btn btn-primary btn-pokemon" data-id="${element.id}" data-bs-toggle="modal" data-bs-target="#pokeDetail">Détails</a>
                 </div>
             </div>
             `;
@@ -158,9 +158,9 @@ document.querySelector('#pokemonSearchBtn').addEventListener('click', function()
                 pokeDiv.innerHTML += `
                 <div class="card m-1 p-0" style="width: 18rem;">
                     <div class="card-header">${element.name}</div>
-                    <img src="${element.picture}" class="card-img-top" alt="...">
+                    <img src="${element.picture}" class="card-img-top" alt="${element.name} picture">
                     <div class="card-body">
-                        <a href="#" class="btn btn-primary btn-pokemon" data-id="${element.id}">Détail</a>
+                        <a href="#" class="btn btn-primary btn-pokemon" data-id="${element.id}" data-bs-toggle="modal" data-bs-target="#pokeDetail">Détails</a>
                     </div>
                 </div>
                 `;
