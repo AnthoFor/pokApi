@@ -3,8 +3,8 @@ import { drawNavbar, hide, unhide, fetchData, drawMsg } from "./functions.js";
 // VAR
 let usermail;
 let userpw;
-// let uri = 'http://localhost:8080/' ;
-let uri = 'https://pokapi.anthony-foret.fr/';
+let uri = 'http://localhost:8080/' ;
+// let uri = 'https://pokapi.anthony-foret.fr/';
 
 
 // Déjà loggé ?
@@ -22,12 +22,15 @@ if (localStorage.getItem('token')) {
     .then((res) => {
         let firstnameB = localStorage.getItem('firstname');
         drawNavbar();
-        hide(document.querySelector('#loginForm'));
+        // hide(document.querySelector('#loginForm'));
         drawMsg('#welcDiv > span', `bonjour ${firstnameB}, connexion établie.`)
     })
     .catch((err) => {
         console.log('erreur : ', err.message);
+        unhide(document.querySelector('#loginForm'))
     })
+} else {
+    unhide(document.querySelector('#loginForm'))
 }
 
 // EventListener
@@ -74,7 +77,7 @@ document.querySelector("#loginBtn").addEventListener("click", async function () 
                     body: JSON.stringify({ usermail: usermail, password: userpw }),
                     headers: { "Content-type": "application/json" }
                 })
-                if (response.status ==! 500) {
+                if (response.status !== 500) {
                     drawMsg('#welcDiv > span', `Veuillez vérifier vos mail (spam inclus)`)
                 } else {
                     loginFormError.innerHTML = `${response.message}`;
@@ -120,27 +123,72 @@ document.querySelector('#findAllPokemons').addEventListener('click', function ()
     .then((res) => {
         let results = res.data;
         let pokeDiv = document.querySelector('#pokemonsList > .row');
+        pokeDiv.innerHTML = '';
         unhide(document.querySelector('#pokemonsList'));
         results.forEach(element => {
-            let types = element.types.join(', ');
             pokeDiv.innerHTML += `
             <div class="card m-1 p-0" style="width: 18rem;">
                 <div class="card-header">${element.name}</div>
                 <img src="${element.picture}" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <p class="card-text">Point de vie: ${element.hp}</p>
-                    <p class="card-text">Point de combat: ${element.cp}</p>
-                    <p class="card-text">type : ${types}</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    <a href="#" class="btn btn-primary btn-pokemon" data-id="${element.id}" data-bs-toggle="modal" data-bs-target="#pokeDetail">Détail</a>
                 </div>
             </div>
             `;
         });
     })
+    searchPokeInput.value = '';
 });
 
 // LISTE DES POKEMONS avec recherches
 document.querySelector('#pokemonSearchBtn').addEventListener('click', function() {
     event.preventDefault();
-    console.log('cherche!')
+    let searchTerms = searchPokeInput.value;
+    if (searchTerms) {
+        fetch(uri + `api/pokemons?name=${searchTerms}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        })
+        .then((res) => res.json())
+        .then((res) => {
+            let results = res.data;
+            let pokeDiv = document.querySelector('#pokemonsList > .row');
+            pokeDiv.innerHTML = '';
+            unhide(document.querySelector('#pokemonsList'));
+            results.forEach(element => {
+                pokeDiv.innerHTML += `
+                <div class="card m-1 p-0" style="width: 18rem;">
+                    <div class="card-header">${element.name}</div>
+                    <img src="${element.picture}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <a href="#" class="btn btn-primary btn-pokemon" data-id="${element.id}">Détail</a>
+                    </div>
+                </div>
+                `;
+            });
+        })
+    }
+})
+
+// Afficher un pokemon en mode solo
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('btn-pokemon')) {
+        let idPoke = parseInt(event.target.dataset.id); 
+        fetch(uri + `api/pokemons/${idPoke}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        })
+        .then((res) => res.json())
+        .then((res) => {
+            let results = res.data;
+            unhide(document.querySelector('#pokemonsList'));
+            let types = results.types.join(', ');
+            pokeModalTitle.innerHTML = `${results.name}`;
+            pokeModalBody.innerHTML = `
+            <img src="${results.picture}" class="card-img-top" alt="${results.name} picture">
+            <p class="card-text">Point de vie: ${results.hp}</p>
+            <p class="card-text">Point de combat: ${results.cp}</p>
+            <p class="card-text">type : ${types}</p>
+            `;
+        })
+        searchPokeInput.value = '';
+    }
 })
