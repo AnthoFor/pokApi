@@ -6,32 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PokApi</title>
     <link rel="stylesheet" href="public/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="public/assets/img/icons/font/bootstrap-icons.min.css">
 </head>
 
 <body class="bg-dark">
-    <nav id="navbar" class="navbar navbar-expand-lg sticky-top bg-body-secondary justify-content-between" data-bs-theme="dark">
+    <nav id="navbar" class="navbar navbar-expand-lg sticky-top bg-body-secondary justify-content-between px-1" data-bs-theme="dark">
         <div class="flex-grow-1 d-flex justify-content-between px-3">
             <a class="navbar-brand" href="/">
             <img src="public/assets/img/poke_logo.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
             PokApi!
             </a>
             <button class="navbar-toggler d-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon"></span>
             </button>
         </div>
-        <div class="navbar-collapse collapse flex-grow-1 d-none p-1" id="navbarToggler">
+        <div class="navbar-collapse collapse flex-grow-1 p-1" id="navbarToggler">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="#" id="findAllPokemons">Pokemons</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" aria-disabled="true">Admin</a>
-                </li>
             </ul>
             <form class="d-flex flex-fill" role="search">
-                <input id="searchPokeInput" class="form-control me-2" type="search" placeholder="Search pokemon" aria-label="Search">
+                <input id="searchPokeInput" class="form-control me-2" type="search" placeholder="Search pokemons" aria-label="Search">
                 <button id="pokemonSearchBtn" class="btn btn-outline-secondary" type="submit">Search</button>
             </form>
+            <i class="bi bi-box-arrow-right mx-2" role="button" style="font-size: 2rem; color: white;" id="signout"></i>
         </div>
     </nav>
 
@@ -63,12 +62,27 @@
             </form>
         </div>
     </div>
-
+    <div class="px-5 py-2 d-flex justify-content-center align-items-center gap-2 d-none" id="selectResultPerPage">
+        <span class="text-light text-end"> résultats par page :</span>
+        <select id="resultPerPage" class="ml-1 form-select w-50" aria-label="Result per page">
+            <option selected>Tout</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+    </div>
     <div id="pokemonsList" class="d-none container p-5 justify-content-evenly">
+        <span id="msgFromDb" class="text-success"></span>
         <div class="row justify-content-evenly">
 
         </div>
     </div>
+
+    <nav aria-label="" class="d-flex p-2 justify-content-center mb-5 d-none" id="pagiDiv">
+        <ul class="pagination" id="paginationId">
+        </ul>
+    </nav>
+
     <div class="modal fade p-5" id="pokeDetail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

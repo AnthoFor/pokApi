@@ -1,11 +1,13 @@
-import { drawNavbar, hide, unhide, fetchData, drawMsg } from "./functions.js";
+import { drawNavbar, hide, unhide, fetchData, drawMsg, drawPagination, fullPokeDiv, createFullUri } from "./functions.js";
 
 // VAR
 let usermail;
 let userpw;
-// let uri = 'http://localhost:8080/' ;
-let uri = 'https://pokapi.anthony-foret.fr/';
-
+let uri = 'http://localhost:8080/' ;
+// let uri = 'https://pokapi.anthony-foret.fr/';
+let limit ='Tout';
+let page = 1;
+let headerParams = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }};
 
 // Déjà loggé ?
 if (localStorage.getItem('token')) {
@@ -22,6 +24,7 @@ if (localStorage.getItem('token')) {
     .then((res) => {
         let firstnameB = localStorage.getItem('firstname');
         drawNavbar();
+        unhide(document.querySelector('#selectResultPerPage'));
         // hide(document.querySelector('#loginForm'));
         drawMsg('#welcDiv > span', `bonjour ${firstnameB}, connexion établie.`)
     })
@@ -31,9 +34,9 @@ if (localStorage.getItem('token')) {
     })
 } else {
     unhide(document.querySelector('#loginForm'))
+
 }
 
-// EventListener
 // Pas encore de compte
 document.querySelector('#signupBtn').addEventListener('click', () => {
     event.preventDefault();
@@ -55,7 +58,7 @@ document.querySelector('#alreadySignedBtn').addEventListener('click', () => {
     usermailCheck.value = '';
 })
 
-// LOGIN ou signup ?
+// LOGIN ou SIGNUP ?
 document.querySelector("#loginBtn").addEventListener("click", async function () {
     event.preventDefault();
     usermail = document.querySelector("#usermail").value;
@@ -86,8 +89,9 @@ document.querySelector("#loginBtn").addEventListener("click", async function () 
                 console.log(e)
             }
         }
+    } 
     // SIGN IN
-    } else {
+    else {
         try { 
             const response = await fetchData(uri + "api/login", {
                 method: "POST",
@@ -101,9 +105,11 @@ document.querySelector("#loginBtn").addEventListener("click", async function () 
                 const firstnameB = firstname != undefined ? firstname : username;
                 localStorage.setItem('token', response.token);
                 localStorage.setItem('firstname', firstnameB);
+                headerParams = { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }};
                 // localStorage.setItem('lastname', lastname);
                 drawNavbar();
                 hide(document.querySelector('#loginForm'));
+                unhide(document.querySelector('#selectResultPerPage'));
                 drawMsg('#welcDiv > span', `bonjour ${firstnameB}, connexion établie.`)
             } else {
                 loginFormError.innerHTML = `${response.message}`;
@@ -115,69 +121,43 @@ document.querySelector("#loginBtn").addEventListener("click", async function () 
 });
 
 // LISTE DES POKEMONS
-document.querySelector('#findAllPokemons').addEventListener('click', function () {
-    fetch(uri + "api/pokemons", {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    })
-    .then((res) => res.json())
-    .then((res) => {
-        let results = res.data;
-        let pokeDiv = document.querySelector('#pokemonsList > .row');
-        pokeDiv.innerHTML = '';
-        unhide(document.querySelector('#pokemonsList'));
-        results.forEach(element => {
-            pokeDiv.innerHTML += `
-            <div class="card m-1 p-0" style="width: 18rem;">
-                <div class="card-header">${element.name}</div>
-                <img src="${element.picture}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <a href="#" class="btn btn-primary btn-pokemon" data-id="${element.id}" data-bs-toggle="modal" data-bs-target="#pokeDetail">Détails</a>
-                </div>
-            </div>
-            `;
-        });
-    })
+document.querySelector('#findAllPokemons').addEventListener('click', async function () {
+    page = 1;
     searchPokeInput.value = '';
+    let fullUri = createFullUri(uri, searchPokeInput.value, page, limit);
+    try {
+        const res = await fetchData(fullUri, headerParams);
+        drawPagination(res.count, page, limit)
+        fullPokeDiv(res.data);
+        msgFromDb.innerHTML = res.message;
+    } catch(e) {
+        console.log(e)
+    }
 });
 
 // LISTE DES POKEMONS avec recherches
-document.querySelector('#pokemonSearchBtn').addEventListener('click', function() {
+document.querySelector('#pokemonSearchBtn').addEventListener('click', async function() {
     event.preventDefault();
-    let searchTerms = searchPokeInput.value;
-    if (searchTerms) {
-        fetch(uri + `api/pokemons?name=${searchTerms}`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-        })
-        .then((res) => res.json())
-        .then((res) => {
-            let results = res.data;
-            let pokeDiv = document.querySelector('#pokemonsList > .row');
-            pokeDiv.innerHTML = '';
-            unhide(document.querySelector('#pokemonsList'));
-            results.forEach(element => {
-                pokeDiv.innerHTML += `
-                <div class="card m-1 p-0" style="width: 18rem;">
-                    <div class="card-header">${element.name}</div>
-                    <img src="${element.picture}" class="card-img-top" alt="${element.name} picture">
-                    <div class="card-body">
-                        <a href="#" class="btn btn-primary btn-pokemon" data-id="${element.id}" data-bs-toggle="modal" data-bs-target="#pokeDetail">Détails</a>
-                    </div>
-                </div>
-                `;
-            });
-        })
+    page = 1;
+    let fullUri = createFullUri(uri, searchPokeInput.value, page, limit);
+    try {
+        const res = await fetchData(fullUri, headerParams)
+        drawPagination(res.count, page, limit)
+        fullPokeDiv(res.data);
+        msgFromDb.innerHTML = res.message;
+    } catch(e) {
+        console.error(e)
     }
 })
 
-// Afficher un pokemon en mode solo
-document.addEventListener('click', function(event) {
+// Event Listener spécifique
+document.addEventListener('click', async function(event) {
+    // Afficher un pokemon en mode solo
     if (event.target.classList.contains('btn-pokemon')) {
-        let idPoke = parseInt(event.target.dataset.id); 
-        fetch(uri + `api/pokemons/${idPoke}`, {
-            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-        })
-        .then((res) => res.json())
-        .then((res) => {
+        let idPoke = parseInt(event.target.dataset.id);
+        let fullUri = uri + `api/pokemons/${idPoke}`; 
+        try {
+            const res = await fetchData(fullUri, headerParams)
             let results = res.data;
             unhide(document.querySelector('#pokemonsList'));
             let types = results.types.join(', ');
@@ -188,7 +168,44 @@ document.addEventListener('click', function(event) {
             <p class="card-text">Point de combat: ${results.cp}</p>
             <p class="card-text">type : ${types}</p>
             `;
-        })
+        } catch(e) {
+            console.error(e);
+        }
         searchPokeInput.value = '';
+    }
+    // Prise en compte d'un nombre maxi (limit)
+    if (event.target.id ==='resultPerPage') {
+        if (event.target.value !== 'Tout') {
+            limit = parseInt(event.target.value);
+        } else {
+            limit = 'Tout';
+        }
+        let fullUri = createFullUri(uri, searchPokeInput.value, page, limit);
+        try {
+            const res = await fetchData(fullUri, headerParams)
+            drawPagination(res.count, page, limit)
+            fullPokeDiv(res.data);
+            msgFromDb.innerHTML = res.message;
+        } catch(e) {
+            console.log(e)
+        }
+    }
+    // Gestion de la page (offset)
+    if (event.target.classList.contains('page-link')) {
+        page = parseInt(event.target.dataset.topage);
+        let fullUri = createFullUri(uri, searchPokeInput.value, page, limit);
+        try {
+            const res = await fetchData(fullUri, headerParams)
+            drawPagination(res.count, page, limit)
+            fullPokeDiv(res.data);
+            msgFromDb.innerHTML = res.message;
+        } catch(e) {
+            console.log(e)
+        }
+    }
+    // Déconnexion
+    if (event.target.id === "signout") {
+        localStorage.clear();
+        location.reload(true);
     }
 })
